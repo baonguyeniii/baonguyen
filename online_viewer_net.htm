@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chữ Bay Lãng Mạn</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: black;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+    }
+
+    #scene {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .text {
+      position: absolute;
+      font-size: 28px;
+      white-space: nowrap;
+      opacity: 0;
+      transform: scale(0.8);
+      animation-duration: 8s;
+      animation-timing-function: ease-in-out;
+    }
+
+    .start-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ff69b4;
+      border: none;
+      color: white;
+      font-size: 20px;
+      padding: 15px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 0 20px #ff69b4;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 10px #ff69b4; }
+      50% { box-shadow: 0 0 30px #ff69b4; }
+      100% { box-shadow: 0 0 10px #ff69b4; }
+    }
+
+    @keyframes floatUpZoom {
+      0% { transform: translateY(50px) scale(0.6); opacity: 0; }
+      20% { transform: translateY(0px) scale(1.2); opacity: 1; }
+      50% { transform: translateY(-20px) scale(1); opacity: 1; }
+      100% { transform: translateY(-100px) scale(0.8); opacity: 0; }
+    }
+
+    @keyframes floatDownZoom {
+      0% { transform: translateY(-50px) scale(0.6); opacity: 0; }
+      20% { transform: translateY(0px) scale(1.2); opacity: 1; }
+      50% { transform: translateY(20px) scale(1); opacity: 1; }
+      100% { transform: translateY(100px) scale(0.8); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Nút bắt đầu -->
+  <button class="start-btn" onclick="start()">Bắt đầu</button>
+
+  <!-- Nhạc nền -->
+  <audio id="bgMusic" loop>
+    <source src="nhac.mp3" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ phát nhạc.
+  </audio>
+
+  <!-- Hiệu ứng chữ -->
+  <div id="scene"></div>
+
+  <script>
+    const scene = document.getElementById("scene");
+    const texts = [
+      "Anh yêu em nhiều lắm ♡",
+      "Cảm ơn vì em đã đến",
+      "Anh sẽ luôn bên cạnh em",
+      "Bên anh mãi nhé ♡",
+      "Em là điều tuyệt vời nhất",
+      "Yêu em trọn đời ♡"
+    ];
+    const colors = ["#ff69b4", "#00ffff", "#ffff00", "#ff4500", "#00ff00", "#ff1493"];
+
+    function createText() {
+      for (let i = 0; i < 3; i++) {
+        const text = document.createElement("div");
+        text.className = "text";
+        text.innerText = texts[Math.floor(Math.random() * texts.length)];
+
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        text.style.color = color;
+        text.style.textShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+        const x = Math.random() * (window.innerWidth - 200);
+        const y = Math.random() * (window.innerHeight - 100);
+
+        text.style.left = `${x}px`;
+        text.style.top = `${y}px`;
+
+        text.style.animationName = Math.random() < 0.5 ? "floatUpZoom" : "floatDownZoom";
+        text.style.animationDelay = `${Math.random()}s`;
+
+        scene.appendChild(text);
+
+        text.addEventListener("animationend", () => {
+          text.remove();
+        });
+      }
+    }
+
+    let interval;
+    function start() {
+      document.querySelector(".start-btn").style.display = "none";
+      document.getElementById("bgMusic").play();
+      interval = setInterval(createText, 500);
+    }
+  </script>
+</body>
+</html>
